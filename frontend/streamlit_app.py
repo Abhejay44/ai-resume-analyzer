@@ -9,7 +9,7 @@ st.set_page_config(
 )
 
 st.title("📄 AI Resume Analyzer")
-st.write("Upload your resume and send it to the FastAPI backend.")
+st.write("Upload your resume.")
 
 uploaded_file = st.file_uploader(
     "Choose a PDF resume",
@@ -40,13 +40,12 @@ if uploaded_file is not None:
 
             st.success(result["message"])
             st.write(f"Filename: {result['filename']}")
-            st.write(f"File type: {result['content_type']}")
-            st.write(f"File size: {result['size_bytes']} bytes")
+            st.write(f"Content type: {result['content_type']}")
+            st.write(f"Size: {result['size_bytes']} bytes")
 
         except requests.exceptions.ConnectionError:
             st.error(
                 "Could not connect to FastAPI. "
-                "Make sure the backend is running on port 8000."
             )
 
         except requests.exceptions.RequestException as error:

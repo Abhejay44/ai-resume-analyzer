@@ -5,6 +5,8 @@ app = FastAPI(title="AI Resume Analyzer API")
 
 @app.get("/")
 def home() -> dict[str, str]:
+    """simple check message."""
+
     return {"message": "AI Resume Analyzer API is running"}
 
 
@@ -12,6 +14,16 @@ def home() -> dict[str, str]:
 async def upload_resume(
     resume: UploadFile = File(...),
 ) -> dict[str, str | int]:
+    """
+    Receives an uploaded resume and return basic file information.
+
+    Args:
+        resume: PDF file uploaded by the frontend.
+
+    Returns:
+        Information confirming that the file was received.
+    """
+
     file_contents = await resume.read()
 
     return {
