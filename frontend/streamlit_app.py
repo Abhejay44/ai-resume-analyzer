@@ -9,7 +9,7 @@ st.set_page_config(
 )
 
 st.title("📄 AI Resume Analyzer")
-st.write("Upload your resume.")
+st.write("Upload your resume and extract its text.")
 
 uploaded_file = st.file_uploader(
     "Choose a PDF resume",
@@ -19,8 +19,8 @@ uploaded_file = st.file_uploader(
 if uploaded_file is not None:
     st.write(f"Selected file: {uploaded_file.name}")
 
-    if st.button("Upload Resume"):
-        files = {
+    if st.button("Extract Resume Text"):
+        upload_payload = {
             "resume": (
                 uploaded_file.name,
                 uploaded_file.getvalue(),
@@ -31,7 +31,7 @@ if uploaded_file is not None:
         try:
             response = requests.post(
                 API_URL,
-                files=files,
+                files=upload_payload,
                 timeout=30,
             )
 
@@ -41,11 +41,22 @@ if uploaded_file is not None:
             st.success(result["message"])
             st.write(f"Filename: {result['filename']}")
             st.write(f"Content type: {result['content_type']}")
-            st.write(f"Size: {result['size_bytes']} bytes")
+            st.write(
+                f"Extracted characters: "
+                f"{result['character_count']}"
+            )
+
+            st.subheader("Extracted Resume Text")
+            st.text_area(
+                "Resume text",
+                value=result["text"],
+                height=400,
+            )
 
         except requests.exceptions.ConnectionError:
             st.error(
                 "Could not connect to FastAPI. "
+                "Make sure the backend is running."
             )
 
         except requests.exceptions.RequestException as error:
