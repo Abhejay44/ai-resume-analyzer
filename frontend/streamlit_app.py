@@ -45,7 +45,11 @@ if uploaded_file is not None:
                 f"Extracted characters: "
                 f"{result['character_count']}"
             )
-
+            st.subheader("Detected Skills")
+            if result["skills"]:
+               st.write(", ".join(result["skills"]))
+            else:
+               st.info("No known technical skills were detected.")   
             st.subheader("Extracted Resume Text")
             st.text_area(
                 "Resume text",

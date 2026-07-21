@@ -1,6 +1,7 @@
 from fastapi import FastAPI, File, HTTPException, UploadFile
 
 from app.parser import extract_pdf_text
+from app.skills import extract_skills
 
 app = FastAPI(title="AI Resume Analyzer API")
 
@@ -15,15 +16,15 @@ def home() -> dict[str, str]:
 @app.post("/upload-resume")
 async def upload_resume(
     resume: UploadFile = File(...),
-) -> dict[str, str | int]:
+) -> dict[str, str | int | list[str]]:
     """
-    Receive a PDF resume and return extracted text.
+    Receive a PDF resume and return extracted text and skills.
 
     Args:
         resume: PDF file uploaded by the frontend.
 
     Returns:
-        File information and extracted resume text.
+        File information, extracted text, and detected skills.
     """
 
     if resume.content_type != "application/pdf":
@@ -34,7 +35,6 @@ async def upload_resume(
 
     try:
         extracted_text = await extract_pdf_text(resume)
-
     except Exception as error:
         raise HTTPException(
             status_code=400,
@@ -47,10 +47,13 @@ async def upload_resume(
             detail="No readable text was found in the PDF.",
         )
 
+    detected_skills = extract_skills(extracted_text)
+
     return {
         "filename": resume.filename or "unknown.pdf",
         "content_type": resume.content_type or "unknown",
         "character_count": len(extracted_text),
         "text": extracted_text,
-        "message": "Resume text extracted successfully",
+        "skills": detected_skills,
+        "message": "Resume analyzed successfully",
     }
