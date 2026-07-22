@@ -1,6 +1,7 @@
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 
 from app.parser import extract_pdf_text
+from app.scorer import calculate_skill_match
 from app.skills import extract_skills
 
 app = FastAPI(title="AI Resume Analyzer API")
@@ -13,24 +14,32 @@ def home() -> dict[str, str]:
     return {"message": "AI Resume Analyzer API is running"}
 
 
-@app.post("/upload-resume")
-async def upload_resume(
+@app.post("/analyze-resume")
+async def analyze_resume(
     resume: UploadFile = File(...),
-) -> dict[str, str | int | list[str]]:
+    job_description: str = Form(...),
+) -> dict[str, object]:
     """
-    Receive a PDF resume and return extracted text and skills.
+    Compare an uploaded resume with a job description.
 
     Args:
-        resume: PDF file uploaded by the frontend.
+        resume: PDF resume uploaded by the frontend.
+        job_description: Job-description text entered by the user.
 
     Returns:
-        File information, extracted text, and detected skills.
+        Extracted text, detected skills, and skill-match results.
     """
 
     if resume.content_type != "application/pdf":
         raise HTTPException(
             status_code=400,
             detail="Only PDF files are supported.",
+        )
+
+    if not job_description.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="The job description cannot be empty.",
         )
 
     try:
@@ -47,13 +56,22 @@ async def upload_resume(
             detail="No readable text was found in the PDF.",
         )
 
-    detected_skills = extract_skills(extracted_text)
+    resume_skills = extract_skills(extracted_text)
+    job_skills = extract_skills(job_description)
+
+    match_result = calculate_skill_match(
+        resume_skills=resume_skills,
+        job_skills=job_skills,
+    )
 
     return {
         "filename": resume.filename or "unknown.pdf",
-        "content_type": resume.content_type or "unknown",
         "character_count": len(extracted_text),
         "text": extracted_text,
-        "skills": detected_skills,
-        "message": "Resume analyzed successfully",
+        "resume_skills": resume_skills,
+        "job_skills": job_skills,
+        "score": match_result["score"],
+        "matched_skills": match_result["matched_skills"],
+        "missing_skills": match_result["missing_skills"],
+        "message": "Resume analysis completed successfully",
     }
