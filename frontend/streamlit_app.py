@@ -94,6 +94,14 @@ if st.button("Analyze Resume"):
                     "No known technical skills were detected "
                     "in the job description."
                 )
+            st.subheader("Detected Resume Sections")
+
+            if result["sections"]:
+                for section_name, section_text in result["sections"].items():
+                    with st.expander(section_name.replace("_", " ").title()):
+                        st.text(section_text)
+            else:
+                st.info("No recognizable resume sections were detected.")    
 
             st.subheader("Extracted Resume Text")
 

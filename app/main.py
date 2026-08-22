@@ -3,6 +3,7 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from app.parser import extract_pdf_text
 from app.scorer import calculate_skill_match
 from app.skills import extract_skills
+from app.sections import extract_sections
 
 app = FastAPI(title="AI Resume Analyzer API")
 
@@ -57,17 +58,19 @@ async def analyze_resume(
         )
 
     resume_skills = extract_skills(extracted_text)
+    resume_sections = extract_sections(extracted_text)
     job_skills = extract_skills(job_description)
 
     match_result = calculate_skill_match(
-        resume_skills=resume_skills,
-        job_skills=job_skills,
+        resume_skills,
+        job_skills,
     )
 
     return {
         "filename": resume.filename or "unknown.pdf",
         "character_count": len(extracted_text),
         "text": extracted_text,
+        "sections": resume_sections,
         "resume_skills": resume_skills,
         "job_skills": job_skills,
         "score": match_result["score"],
