@@ -4,6 +4,7 @@ from app.parser import extract_pdf_text
 from app.scorer import calculate_skill_match
 from app.skills import extract_skills
 from app.sections import extract_sections
+from app.ai_analyzer import analyze_resume_with_ai
 
 app = FastAPI(title="AI Resume Analyzer API")
 
@@ -65,6 +66,10 @@ async def analyze_resume(
         resume_skills,
         job_skills,
     )
+    ai_feedback = analyze_resume_with_ai(
+        resume_text=extracted_text,
+        job_description=job_description,
+    )
 
     return {
         "filename": resume.filename or "unknown.pdf",
@@ -76,5 +81,6 @@ async def analyze_resume(
         "score": match_result["score"],
         "matched_skills": match_result["matched_skills"],
         "missing_skills": match_result["missing_skills"],
+        "ai_feedback": ai_feedback,
         "message": "Resume analysis completed successfully",
     }

@@ -101,7 +101,10 @@ if st.button("Analyze Resume"):
                     with st.expander(section_name.replace("_", " ").title()):
                         st.text(section_text)
             else:
-                st.info("No recognizable resume sections were detected.")    
+                st.info("No recognizable resume sections were detected.") 
+
+            st.subheader("AI Resume Feedback")
+            st.write(result["ai_feedback"])
 
             st.subheader("Extracted Resume Text")
 
