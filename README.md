@@ -18,9 +18,14 @@ The application combines deterministic text analysis with AI-powered feedback to
 - Display analysis results through an interactive Streamlit interface
 
 ## Demo
+Screenshots:
+1.
 ![Demo screenshot 1](screenshots/github_project_screenshot1.png)
+2.
 ![Demo screenshot 2](screenshots/github_project_screenshot2.png)
+3.
 ![Demo screenshot 3](screenshots/github_project_screenshot3.png)
+4.
 ![Demo screenshot 4](screenshots/github_project_screenshot4.png)
 
 
