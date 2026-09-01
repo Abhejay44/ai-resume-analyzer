@@ -19,16 +19,17 @@ The application combines deterministic text analysis with AI-powered feedback to
 
 ## Demo
 Screenshots:
-1.
-![Demo screenshot 1](screenshots/github_project_screenshot1.png)
-2.
-![Demo screenshot 2](screenshots/github_project_screenshot2.png)
-3.
-![Demo screenshot 3](screenshots/github_project_screenshot3.png)
-4.
-![Demo screenshot 4](screenshots/github_project_screenshot4.png)
+### 1. Screenshot 1
+![Demo](screenshots/github_project_screenshot1.png)
 
+### 2. Screenshot 2
+![Demo](screenshots/github_project_screenshot2.png)
 
+### 3. Screenshot 3
+![Demo](screenshots/github_project_screenshot3.png)
+
+### 4. Screenshot 4
+![Demo](screenshots/github_project_screenshot4.png)
 
 ## Tech Stack
 
