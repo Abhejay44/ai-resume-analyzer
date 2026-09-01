@@ -36,7 +36,7 @@ SECTION_HEADINGS = {
 
 def normalize_heading(line: str) -> str:
     """
-    Normalize a possible section heading for comparison.
+    Normalize section headings for comparison.
 
     Args:
         line: One line of resume text.
@@ -114,3 +114,28 @@ def extract_sections(text: str) -> dict[str, str]:
         for section_name, section_lines in sections.items()
         if section_lines
     }
+def section_detection_is_weak(
+    sections: dict[str, str],
+) -> bool:
+    """
+    Decide if deterministic section detection is usable or not. (By checking if at least 2 important sections are detected)
+
+    Args:
+        sections: Detected resume sections.
+
+    Returns:
+        True when too few important sections were detected.
+    """
+
+    important_sections = {
+        "education",
+        "experience",
+        "projects",
+        "skills",
+    }
+
+    detected_important_sections = important_sections.intersection(
+        sections.keys()
+    )
+
+    return len(detected_important_sections) < 2

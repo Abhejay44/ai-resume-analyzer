@@ -5,6 +5,8 @@ from app.scorer import calculate_skill_match
 from app.skills import extract_skills
 from app.sections import extract_sections
 from app.ai_analyzer import analyze_resume_with_ai
+from app.sections import extract_sections, section_detection_is_weak
+from app.ai_sections import extract_sections_with_ai
 
 app = FastAPI(title="AI Resume Analyzer API")
 
@@ -60,6 +62,20 @@ async def analyze_resume(
 
     resume_skills = extract_skills(extracted_text)
     resume_sections = extract_sections(extracted_text)
+    section_detection_weak = section_detection_is_weak(resume_sections)
+    resume_sections = extract_sections(extracted_text)
+    section_detection_method = "deterministic"
+
+    if section_detection_weak:
+        try:
+            resume_sections = extract_sections_with_ai(
+            extracted_text
+            )
+
+            section_detection_method = "ai"
+
+        except Exception:
+            section_detection_method = "deterministic"
     job_skills = extract_skills(job_description)
 
     match_result = calculate_skill_match(
@@ -76,6 +92,8 @@ async def analyze_resume(
         "character_count": len(extracted_text),
         "text": extracted_text,
         "sections": resume_sections,
+        "section_detection_weak": section_detection_weak,
+        "section_detection_method": section_detection_method,
         "resume_skills": resume_skills,
         "job_skills": job_skills,
         "score": match_result["score"],

@@ -57,6 +57,13 @@ if st.button("Analyze Resume"):
 
             st.success(result["message"])
 
+            if result["section_detection_weak"]:
+                st.warning("Some important resume sections have not been detected.")    
+
+            st.caption(f"Section detection method: "
+             f"{result['section_detection_method'].title()}"
+            )    
+
             st.metric(
                 label="Technical Skill Match",
                 value=f"{result['score']}%",
