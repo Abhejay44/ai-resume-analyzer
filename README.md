@@ -60,7 +60,7 @@ The application combines deterministic text analysis with AI-powered feedback to
 
 ## Architecture
 
-
+```text
 User
  │
  ▼
@@ -86,11 +86,12 @@ JSON Response
  │
  ▼
 Streamlit Results
+```
 
 
 
 ## Project Structure
-
+```text
 ai-resume-analyzer/
 ├── app/
 │   ├── __init__.py
@@ -108,6 +109,7 @@ ai-resume-analyzer/
 ├── LICENSE
 ├── README.md
 └── requirements.txt
+```
 
 
 
